@@ -1,0 +1,31 @@
+version: '3'
+services:
+  postgres:
+    image: $DB_IMG
+    ports:
+      - $DB_PORT:$DB_PORT
+    environment:
+      - DB_IMG=$DB_IMG
+      - DB_PORT=$DB_PORT
+      - POSTGRES_USER=$DB_UN
+      - POSTGRES_PASSWORD=$DB_PW
+
+  redis:
+    image: 'redis'
+    ports:
+      - $REDIS_PORT:$REDIS_PORT
+  rails:
+    depends_on:
+      - 'postgres'
+      - 'redis'
+    build: .
+    ports:
+      - $RAILS_PORT:$RAILS_PORT
+    environment:
+      - DATABASE_HOST=$DB_HOST
+      - DATABASE_PORT=$DB_PORT
+      - DATABASE_USERNAME=$DB_UN
+      - DATABASE_PASSWORD=$DB_PW
+      - REDIS_PORT=$REDIS_PORT
+      - REDIS_URL=$REDIS_URL
+      - RAILS_PORT=$RAILS_PORT
